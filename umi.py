@@ -30,11 +30,13 @@ def get_local_ip():
         return "N/A"
 
 def main():
-    # Suppress QStandardPaths warning
+    # Set Qt platform and display settings
     os.environ["XDG_RUNTIME_DIR"] = "/tmp/runtime-root"
+    os.environ["QT_QPA_PLATFORM"] = "eglfs"
+    os.environ["DISPLAY"] = ":0"
     
     parser = argparse.ArgumentParser(description='UMI')
-    parser.add_argument('--host_ip', type=str, default='192.168.1.100', help='host ip')
+    parser.add_argument('--host_ip', type=str, default='192.168.0.141', help='host ip')
     parser.add_argument('--port', type=int, default=11001, help='port')
     parser.add_argument('--id', type=str, default="UMI_GRIPPER_LEFT", help='Camera ID')
     args = parser.parse_args()
