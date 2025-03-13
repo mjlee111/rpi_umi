@@ -30,6 +30,9 @@ def get_local_ip():
         return "N/A"
 
 def main():
+    # Suppress QStandardPaths warning
+    os.environ["XDG_RUNTIME_DIR"] = "/tmp/runtime-root"
+    
     parser = argparse.ArgumentParser(description='UMI')
     parser.add_argument('--host_ip', type=str, default='192.168.1.100', help='host ip')
     parser.add_argument('--port', type=int, default=11001, help='port')
