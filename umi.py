@@ -30,10 +30,12 @@ def get_local_ip():
         return "N/A"
 
 def main():
-    # Set Qt platform and display settings
     os.environ["XDG_RUNTIME_DIR"] = "/tmp/runtime-root"
     os.environ["QT_QPA_PLATFORM"] = "eglfs"
     os.environ["DISPLAY"] = ":0"
+    
+    os.environ["QT_QPA_EGLFS_PHYSICAL_WIDTH"] = "155"
+    os.environ["QT_QPA_EGLFS_PHYSICAL_HEIGHT"] = "86"
     
     parser = argparse.ArgumentParser(description='UMI')
     parser.add_argument('--host_ip', type=str, default='192.168.0.141', help='host ip')
@@ -58,7 +60,7 @@ def main():
     try:
         app = QtWidgets.QApplication([])
         window = QtWidgets.QWidget()
-        window.setWindowTitle(f"[{args.id}] UMI")
+        window.setWindowTitle(f"{args.id}")
         window.setFixedSize(240, 240)
         
         logo_label = QtWidgets.QLabel()
@@ -70,20 +72,20 @@ def main():
         metrics_label = QtWidgets.QLabel()
         
         toggle_button = QtWidgets.QPushButton("Start")
-        toggle_button.setStyleSheet("background-color: green; color: white;")
+        toggle_button.setStyleSheet("color: green;")
 
         def toggle_stream():
             nonlocal is_streaming
             if not is_streaming:
                 udp_stream.start_send_thread()
                 toggle_button.setText("Stop")
-                toggle_button.setStyleSheet("background-color: red; color: white;")
+                toggle_button.setStyleSheet("color: red;")
                 is_streaming = True
                 print(f"[{args.id}] UDP stream started")
             else:
                 udp_stream.stop_send_thread()
                 toggle_button.setText("Start")
-                toggle_button.setStyleSheet("background-color: green; color: white;")
+                toggle_button.setStyleSheet("color: green;")
                 is_streaming = False
                 print(f"[{args.id}] UDP stream stopped")
         
