@@ -26,7 +26,7 @@ class UDPStream:
     def start_recv_thread(self):
         print(f"[{self.id}] Starting UDP receiver thread")
         self.running = True
-        self.recv_thread = threading.Thread(target=self.recv_frame_with_ack)
+        self.recv_thread = threading.Thread(target=self.recv_frame)
         self.recv_thread.start()
         
     def stop_recv_thread(self):
@@ -54,7 +54,7 @@ class UDPStream:
             frame = self.get_frame()
             if frame is not None:
                 frame = cv2.resize(frame, (640, 240))
-                self.send_frame_with_rtt(frame)
+                self.send_frame(frame)
 
     def send_frame(self, frame):
         encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
