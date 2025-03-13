@@ -20,6 +20,7 @@ class UDPStream:
             self.running = False
         else:
             print(f"[{id}] UDP sender node initialized")
+            self.sequence_number = 0
 
     def start_recv_thread(self):
         print(f"[{self.id}] Starting UDP receiver thread")
