@@ -24,7 +24,7 @@ class UDPStream:
     def start_recv_thread(self):
         print(f"[{self.id}] Starting UDP receiver thread")
         self.running = True
-        self.recv_thread = threading.Thread(target=self.recv_frame)
+        self.recv_thread = threading.Thread(target=self.recv_frame_with_ack)
         self.recv_thread.start()
         
     def stop_recv_thread(self):
@@ -52,19 +52,68 @@ class UDPStream:
             frame = self.get_frame()
             if frame is not None:
                 frame = cv2.resize(frame, (640, 240))
-                self.send_frame(frame)
+                self.send_frame_with_rtt(frame)
 
     def send_frame(self, frame):
         encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
         _, buffer = cv2.imencode(".jpg", frame, encode_param)
         self.sock.sendto(buffer.tobytes(), (self.host, self.port))
+        
+    def send_frame_with_rtt(self, frame):
+        encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
+        _, buffer = cv2.imencode(".jpg", frame, encode_param)
+
+        seq_num = self.sequence_number
+        self.sequence_number += 1
+
+        seq_bytes = struct.pack('I', seq_num)
+
+        self.sock.sendto(seq_bytes + buffer.tobytes(), (self.host, self.port))
+
+        send_time = time.time()
+
+        try:
+            self.sock.settimeout(1.0)
+            ack_data, _ = self.sock.recvfrom(1024)
+
+            ack_seq = struct.unpack('I', ack_data)[0]
+
+            if ack_seq == seq_num:
+                rtt = (time.time() - send_time) * 1000 
+                print(f"[{self.id}] RTT: {rtt:.2f} ms (seq {seq_num})")
+            else:
+                print(f"[{self.id}] Sequence mismatch: expected {seq_num}, got {ack_seq}")
+
+        except socket.timeout:
+            print(f"[{self.id}] Timeout waiting for ACK for seq {seq_num}")
 
     def recv_frame(self):
         while self.running:
             data, _ = self.sock.recvfrom(65536)
             np_arr = np.frombuffer(data, dtype=np.uint8)
             self.frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+            
+    def recv_frame_with_ack(self):
+        while self.running:
+            try:
+                data, sender_addr = self.sock.recvfrom(65536)
 
+                seq_bytes = data[:4]
+                seq_num = struct.unpack('I', seq_bytes)[0]
+                frame_data = data[4:]
+
+                self.sock.sendto(seq_bytes, sender_addr)
+
+                np_arr = np.frombuffer(frame_data, dtype=np.uint8)
+                frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+                self.frame = cv2.resize(frame, (1280, 480))
+
+            except socket.timeout:
+                continue
+            except Exception as e:
+                print(f"[{self.id}] Error receiving frame: {e}")
+                break
+            
     def open_camera(self, camera_id=0, width=1280, height=480, fps=15):
         print(f"[{self.id}] Trying to open camera {camera_id}")
         self.cap = cv2.VideoCapture(0)
