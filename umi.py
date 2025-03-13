@@ -54,8 +54,9 @@ def main():
         print(f"[{args.id}] Error opening camera: {e}")
         return
     print(f"[{args.id}] Camera opened")
+    udp_stream.start_send_thread()
 
-    is_streaming = False
+    is_streaming = True
     
     try:
         app = QtWidgets.QApplication([])
@@ -71,20 +72,20 @@ def main():
         
         metrics_label = QtWidgets.QLabel()
         
-        toggle_button = QtWidgets.QPushButton("Start")
-        toggle_button.setStyleSheet("color: green;")
+        toggle_button = QtWidgets.QPushButton("STOP UDP")
+        toggle_button.setStyleSheet("color: red;")
 
         def toggle_stream():
             nonlocal is_streaming
             if not is_streaming:
                 udp_stream.start_send_thread()
-                toggle_button.setText("Stop")
+                toggle_button.setText("STOP UDP")
                 toggle_button.setStyleSheet("color: red;")
                 is_streaming = True
                 print(f"[{args.id}] UDP stream started")
             else:
                 udp_stream.stop_send_thread()
-                toggle_button.setText("Start")
+                toggle_button.setText("START UDP")
                 toggle_button.setStyleSheet("color: green;")
                 is_streaming = False
                 print(f"[{args.id}] UDP stream stopped")
