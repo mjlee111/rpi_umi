@@ -61,7 +61,7 @@ def main():
             print(f"CPU Temp: {get_cpu_temperature()}")
             print(f"CPU Usage: {psutil.cpu_percent()}%")
             print(f"Memory Usage: {psutil.virtual_memory().percent}%")
-            time.sleep(1)
+            time.sleep(2)
             
     except KeyboardInterrupt:
         print("\nShutting down...")
