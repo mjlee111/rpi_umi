@@ -31,11 +31,6 @@ def get_local_ip():
 
 def main():
     os.environ["XDG_RUNTIME_DIR"] = "/tmp/runtime-root"
-    os.environ["QT_QPA_PLATFORM"] = "eglfs"
-    os.environ["DISPLAY"] = ":0"
-    
-    os.environ["QT_QPA_EGLFS_PHYSICAL_WIDTH"] = "155"
-    os.environ["QT_QPA_EGLFS_PHYSICAL_HEIGHT"] = "86"
     
     parser = argparse.ArgumentParser(description='UMI')
     parser.add_argument('--host_ip', type=str, default='192.168.0.141', help='host ip')
@@ -59,69 +54,18 @@ def main():
     is_streaming = True
     
     try:
-        app = QtWidgets.QApplication([])
-        window = QtWidgets.QWidget()
-        window.setWindowTitle(f"{args.id}")
-        window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        window.showFullScreen()
-        
-        logo_label = QtWidgets.QLabel()
-        logo_pixmap = QtGui.QPixmap("logo.png")
-        logo_pixmap = logo_pixmap.scaledToWidth(400, QtCore.Qt.SmoothTransformation)
-        logo_label.setPixmap(logo_pixmap)
-        logo_label.setAlignment(QtCore.Qt.AlignCenter)
-        
-        metrics_label = QtWidgets.QLabel()
-        
-        toggle_button = QtWidgets.QPushButton("STOP UDP")
-        toggle_button.setStyleSheet("color: red;")
-
-        def toggle_stream():
-            nonlocal is_streaming
-            if not is_streaming:
-                udp_stream.start_send_thread()
-                toggle_button.setText("STOP UDP")
-                toggle_button.setStyleSheet("color: red;")
-                is_streaming = True
-                print(f"[{args.id}] UDP stream started")
-            else:
-                udp_stream.stop_send_thread()
-                toggle_button.setText("START UDP")
-                toggle_button.setStyleSheet("color: green;")
-                is_streaming = False
-                print(f"[{args.id}] UDP stream stopped")
-        
-        toggle_button.clicked.connect(toggle_stream)
-        
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(logo_label)
-        layout.addWidget(metrics_label)
-        layout.addWidget(toggle_button)
-        window.setLayout(layout)
-        
-        def update_metrics():
-            metrics_label.setText(
-                f"Current IP: {get_local_ip()}\n"
-                f"Host IP: {args.host_ip}\n"
-                f"Port: {args.port}\n"
-                f"CPU Temp: {get_cpu_temperature()}\n"
-                f"CPU Usage: {psutil.cpu_percent()}%\n"
-                f"Memory Usage: {psutil.virtual_memory().percent}%"
-            )
-        
-        ip_timer = QtCore.QTimer()
-        ip_timer.timeout.connect(update_metrics)
-        ip_timer.start(60000)
-        
-        metrics_timer = QtCore.QTimer()
-        metrics_timer.timeout.connect(update_metrics)
-        metrics_timer.start(1000) 
-        
-        update_metrics()
-        window.show()
-        
-        app.exec_()
-        
+        while True:
+            print(f"\n[{args.id}] Status Update:")
+            print(f"Current IP: {get_local_ip()}")
+            print(f"Host IP: {args.host_ip}")
+            print(f"Port: {args.port}")
+            print(f"CPU Temp: {get_cpu_temperature()}")
+            print(f"CPU Usage: {psutil.cpu_percent()}%")
+            print(f"Memory Usage: {psutil.virtual_memory().percent}%")
+            time.sleep(1)
+            
+    except KeyboardInterrupt:
+        print("\nShutting down...")
     finally:
         if is_streaming:
             print(f"[{args.id}] Stopping UDP stream...")
