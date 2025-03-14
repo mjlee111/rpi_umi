@@ -4,7 +4,7 @@ import psutil
 import os
 import time
 import argparse
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt6 import QtWidgets, QtCore, QtGui
 import socket
 
 def get_cpu_temperature():
