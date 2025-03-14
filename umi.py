@@ -62,11 +62,12 @@ def main():
         app = QtWidgets.QApplication([])
         window = QtWidgets.QWidget()
         window.setWindowTitle(f"{args.id}")
-        window.setFixedSize(240, 240)
+        window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        window.showFullScreen()
         
         logo_label = QtWidgets.QLabel()
         logo_pixmap = QtGui.QPixmap("logo.png")
-        logo_pixmap = logo_pixmap.scaledToWidth(200, QtCore.Qt.SmoothTransformation)
+        logo_pixmap = logo_pixmap.scaledToWidth(400, QtCore.Qt.SmoothTransformation)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(QtCore.Qt.AlignCenter)
         
