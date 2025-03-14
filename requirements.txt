@@ -4,4 +4,5 @@ psutil
 socket
 time
 threading
-
+pynput
+gpiozero
