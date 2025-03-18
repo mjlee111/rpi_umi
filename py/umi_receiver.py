@@ -1,7 +1,7 @@
 import cv2
 import argparse
 import os
-from udp_stream import UDPStream
+from rpi_umi.py.udp_stream import UDPStream
 import time
 
 def main():
