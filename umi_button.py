@@ -8,6 +8,8 @@ import os
 KEY6 = 26
 KEY8 = 21
 
+username = os.getlogin()
+
 button6 = Button(KEY6)
 button8 = Button(KEY8)
 
@@ -17,10 +19,10 @@ def handle_button_press(button, key_name):
     print(f"{key_name} PRESS")
     if key_name == "KEY6":
         print("Key Event : Exiting!!!!!!!!!") ## Ctrl+c
-        os.system("sudo kill -2 $(pgrep -f 'python3 /home/pi/rpi_umi/umi_button.py')")
+        os.system("sudo kill -2 $(pgrep -f 'python3 /home/" + username + "/rpi_umi/umi_button.py')")
     elif key_name == "KEY8":
         print("Key Event : Starting!!!!!!!!!") ## START
-        os.system("sudo python3 ~/rpi_umi/umi_start.py")
+        os.system("sudo python3 /home/" + username + "/rpi_umi/umi_stream.py")
         
 button6.when_pressed = lambda: handle_button_press(button6, "KEY6")
 button8.when_pressed = lambda: handle_button_press(button8, "KEY8")
