@@ -18,21 +18,12 @@ echo "source ~/umi/bin/activate" >> ~/.bashrc
 # Install requirements
 pip install -r requirements.txt
 
-# Install python requirements
-pip install -r requirements.txt
-
-# Display config
-echo "Display config required. Start now? (Requires reboot)(y/n)"
+# Setup SPI Display
+echo "Setup SPI Display. Reboot required. (y/n)"
 read -p "Enter y or n: " answer
 if [ "$answer" = "y" ]; then
-    sudo bash display_config.sh
-fi
-
-# Touch config
-echo "Touch config required. Start now? (Requires reboot)(y/n)"
-read -p "Enter y or n: " answer
-if [ "$answer" = "y" ]; then
-    sudo bash touch_config.sh
+    sudo bash display_only_cli.sh
+    sudo reboot
 fi
 
 
