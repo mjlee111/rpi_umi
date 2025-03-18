@@ -19,7 +19,7 @@ def handle_button_press(button, key_name):
     print(f"{key_name} PRESS")
     if key_name == "KEY6":
         print("Key Event : Exiting!!!!!!!!!") ## Ctrl+c
-        os.system("sudo kill -2 $(pgrep -f 'python3 /home/" + username + "/rpi_umi/umi_button.py')")
+        os.system("sudo kill -2 $(pgrep -f 'python3 /home/" + username + "/rpi_umi/umi_stream.py')")
     elif key_name == "KEY8":
         print("Key Event : Starting!!!!!!!!!") ## START
         os.system("sudo python3 /home/" + username + "/rpi_umi/umi_stream.py")
