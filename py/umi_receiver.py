@@ -7,7 +7,7 @@ import time
 def main():
     parser = argparse.ArgumentParser(description='UMI Receiver')
     parser.add_argument('--host_ip', type=str, default='0.0.0.0', help='host ip (use 0.0.0.0 to listen on all interfaces)')
-    parser.add_argument('--port', type=int, default=11001, help='port')
+    parser.add_argument('--port', type=int, default=11002, help='port')
     parser.add_argument('--id', type=str, default="UMI_RECEIVER", help='Receiver ID')
     args = parser.parse_args()
     
