@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 from gpiozero import Button
-from signal import pause
-from pynput import keyboard
+from signal import pause, signal, SIGINT
+import sys
 
 KEY1 = 3
 KEY2 = 5
@@ -77,9 +77,12 @@ button11.when_pressed = lambda: handle_button_press(button11, "KEY11")
 button12.when_pressed = lambda: handle_button_press(button12, "KEY12")
 button13.when_pressed = lambda: handle_button_press(button13, "KEY13")
 
-try:
-    print("Key Test Program - Press Ctrl+C to exit")
-    while True:
-        pass
-except KeyboardInterrupt:
+def signal_handler(sig, frame):
     print("\nProgram terminated by user")
+    sys.exit(0)
+
+# Register the signal handler
+signal(SIGINT, signal_handler)
+
+print("Key Test Program - Press Ctrl+C to exit")
+pause()
