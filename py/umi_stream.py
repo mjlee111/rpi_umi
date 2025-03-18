@@ -1,5 +1,5 @@
 import cv2
-from rpi_umi.py.udp_stream import UDPStream
+from udp_stream import UDPStream
 import psutil
 import os
 import time
