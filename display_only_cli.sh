@@ -27,7 +27,7 @@ hdmi_force_hotplug=1
 max_usb_current=1
 hdmi_group=2
 hdmi_mode=87
-hdmi_cvt 480 480 60 6 0 0 0
+hdmi_cvt 240 240 60 6 0 0 0
 hdmi_drive=2
 display_rotate=0
 EOF
