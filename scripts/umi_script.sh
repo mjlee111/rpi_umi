@@ -3,7 +3,7 @@ current_user=$(whoami)
 echo "UMI Script"
 echo "Current User: $current_user"
 
-target_ip = 192.168.0.141
+target_ip=192.168.0.141
 
 if [ "$current_user" = "right" ]; then
     echo "Right User"
